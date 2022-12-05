@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ComposeSample</string>
+    <string name="cd_expand">cd_expand</string>
+    <string name="cd_done">cd_done</string>
+    <string name="cd_event">cd_event</string>
+    <string name="cd_privacy">cd_privacy</string>
+    <string name="cd_restore">cd_restore</string>
+</resources>
