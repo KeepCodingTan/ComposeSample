@@ -62,4 +62,5 @@ dependencies {
 
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "com.tencent:mmkv-static:1.2.7"
 }

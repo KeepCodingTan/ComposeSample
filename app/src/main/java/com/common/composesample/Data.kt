@@ -3,6 +3,7 @@ package com.common.composesample
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.lightColors
 import androidx.compose.ui.graphics.vector.ImageVector
 import java.util.*
 
@@ -32,3 +33,5 @@ enum class ToDoIcon(
         val Default = Square
     }
 }
+
+private val Blu = lightColors()

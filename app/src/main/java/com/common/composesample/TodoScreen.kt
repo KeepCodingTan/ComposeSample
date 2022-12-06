@@ -83,7 +83,11 @@ fun TodoRow(
     Row(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clickable { startEdit(item) },
+            .swipeToDismiss(onSwipeDismiss = {
+                Log.d("sun","滑动删除了！")
+            }){
+                startEdit(item)
+            },
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = item.task)
