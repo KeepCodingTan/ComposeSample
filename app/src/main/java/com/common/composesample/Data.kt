@@ -34,4 +34,10 @@ enum class ToDoIcon(
     }
 }
 
-private val Blu = lightColors()
+val items = listOf(
+    BottomData("首页",R.mipmap.tab_home,R.mipmap.tab_home_no),
+    BottomData("选课",R.mipmap.tab_select_course,R.mipmap.tab_select_course_no),
+    BottomData("学习",R.mipmap.tab_study,R.mipmap.tab_study_no),
+    BottomData("题库",R.mipmap.tab_my_exam,R.mipmap.tab_my_exam_no),
+    BottomData("我的",R.mipmap.tab_my,R.mipmap.tab_my_no)
+)

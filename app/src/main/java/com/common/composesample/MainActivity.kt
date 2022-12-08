@@ -1,109 +1,60 @@
 package com.common.composesample
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.common.composesample.ui.theme.ComposeSampleTheme
 import com.common.composesample.ui.theme.CustomTheme
+import com.common.composesample.ui.theme.SwitchTheme
 import com.common.composesample.ui.theme.ThemeKinds
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import com.tencent.mmkv.MMKV
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-
     val viewModel by viewModels<TodoViewModel>()
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
-            val choosedThemeid = remember {
-                mutableStateOf(MMKV.defaultMMKV()?.getString("themeId",ThemeKinds.DEFAULT.name) ?: ThemeKinds.DEFAULT.name)
-            }
-            CustomTheme(
-                chooseThemeid = choosedThemeid
-            ) {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-//                    StaggeredGridContent()
-                    Column {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            for (theme in ThemeKinds.values()){
-                                if(choosedThemeid.equals(theme.name)){
-                                    Surface(
-                                        color = Color.Gray.copy(alpha = 0.5f),
-                                        onClick = {
-                                            MMKV.defaultMMKV()?.encode("themeId",theme.name)
-                                            choosedThemeid.value = theme.name
-                                        }
-                                    ) {
-                                        Text(
-                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                            text = theme.name,
-                                            textAlign = TextAlign.Center,
-                                            style = TextStyle(color = MaterialTheme.colors.primary)
-                                        )
-                                    }
-                                }else{
-                                    Surface(
-                                        color = Color.Gray,
-                                        onClick = {
-                                            MMKV.defaultMMKV()?.encode("themeId",theme.name)
-                                            choosedThemeid.value = theme.name
-                                        }
-                                    ) {
-                                        Text(
-                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                            text = theme.name,
-                                            textAlign = TextAlign.Center,
-                                            style = TextStyle(color = MaterialTheme.colors.primary)
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                        TodoScreenUi(
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
+
+            Test()
         }
     }
 
 
     @Composable
+    fun TestTheme(){
+        val choosedThemeid = remember {
+            mutableStateOf(MMKV.defaultMMKV()?.getString("themeId",ThemeKinds.DEFAULT.name) ?: ThemeKinds.DEFAULT.name)
+        }
+        CustomTheme(
+            chooseThemeid = choosedThemeid
+        ) {
+            // A surface container using the 'background' color from the theme
+            SwitchTheme(choosedThemeid){
+                TodoScreenUi()
+            }
+        }
+    }
+
+    @Composable
     private fun TodoScreenUi(modifier: Modifier = Modifier) {
-        /*val items = listOf(
-            TodoItem("测试手动阀手动阀", ToDoIcon.Square),
-            TodoItem("gfgdgdfgsdf", ToDoIcon.Done),
-            TodoItem("的发射点发射点", ToDoIcon.Event),
-            TodoItem("手动阀手动阀", ToDoIcon.Privacy),
-            TodoItem("饿温热微软", ToDoIcon.Trash),
-            TodoItem("和人谈话人体", ToDoIcon.Square)
-        )*/
-//        val items: List<TodoItem> by viewModel.items.observeAsState(listOf())
         TodoScreen(
             items = viewModel._items,
             modifier = modifier,
@@ -117,15 +68,37 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun Test(){
+    val (selectId,setSelectId) = remember {
+        mutableStateOf(0)
+    }
+    val state = rememberPagerState(initialPage = 0)
+    val scope = rememberCoroutineScope()
+    Column() {
+        HorizontalPager(state = state,count = items.size, modifier = Modifier.weight(1f)) { page->
+            val content = items[state.currentPage].name
+            Log.d("sun","内容=${content}")
+            when(page){
+                0-> HomeUi(text = content)
+                1-> HomeUi(text = content)
+                2-> HomeUi(text = content)
+                3-> HomeUi(text = content)
+                4-> HomeUi(text = content)
+            }
+               setSelectId(state.currentPage)
+        }
+        BottomTab(items = items,selectId = selectId){
+            setSelectId(it)
+            scope.launch { state.animateScrollToPage(it) }
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    ComposeSampleTheme {
-        StaggeredGridContent()
-    }
+   Test()
 }
+

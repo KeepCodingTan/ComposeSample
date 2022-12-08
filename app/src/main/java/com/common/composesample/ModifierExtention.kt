@@ -4,7 +4,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.calculateTargetValue
 import androidx.compose.animation.splineBasedDecay
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.horizontalDrag
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.remember
@@ -35,9 +34,6 @@ fun Modifier.swipeToDismiss(
             Animatable(0f)
         }
         pointerInput(Unit){
-            detectTapGestures {
-                onSingleTap()
-            }
             val decay = splineBasedDecay<Float>(this)
             coroutineScope {
                 while (true){

@@ -62,5 +62,7 @@ dependencies {
 
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "com.google.accompanist:accompanist-pager:0.24.2-alpha"
+
     implementation "com.tencent:mmkv-static:1.2.7"
 }
