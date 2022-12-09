@@ -7,19 +7,17 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
-import androidx.core.text.toSpannable
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
     primaryVariant = Purple700,
-    secondary = Teal200
+    secondary = Teal200,
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
-
+    primary = color_1973F4,
+    primaryVariant = color_999999,
+    secondary = Teal200,
     /* Other default colors to override
     background = Color.White,
     surface = Color.White,
@@ -61,7 +59,7 @@ fun ComposeSampleTheme(
 
     MaterialTheme(
         colors = colors,
-        typography = Typography,
+        typography = craneTypography,
         shapes = Shapes,
         content = content
     )
@@ -90,7 +88,7 @@ fun CustomTheme(
 
     MaterialTheme(
         colors = colors,
-        typography = Typography,
+        typography = craneTypography,
         shapes = shape,
         content = content
     )

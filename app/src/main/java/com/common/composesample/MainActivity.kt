@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ScrollableTabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +33,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
             Test()
         }
     }
@@ -71,27 +71,24 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Test(){
-    val (selectId,setSelectId) = remember {
-        mutableStateOf(0)
+    val choosedThemeid = remember {
+        mutableStateOf(MMKV.defaultMMKV()?.getString("themeId",ThemeKinds.DEFAULT.name) ?: ThemeKinds.DEFAULT.name)
     }
-    val state = rememberPagerState(initialPage = 0)
-    val scope = rememberCoroutineScope()
-    Column() {
-        HorizontalPager(state = state,count = items.size, modifier = Modifier.weight(1f)) { page->
-            val content = items[state.currentPage].name
-            Log.d("sun","内容=${content}")
-            when(page){
-                0-> HomeUi(text = content)
-                1-> HomeUi(text = content)
-                2-> HomeUi(text = content)
-                3-> HomeUi(text = content)
-                4-> HomeUi(text = content)
+    CustomTheme(chooseThemeid = choosedThemeid) {
+        val state = rememberPagerState(initialPage = 0)
+        Column() {
+            HorizontalPager(state = state,count = items.size, modifier = Modifier.weight(1f)) { page->
+                val content = items[state.currentPage].name
+                Log.d("sun","内容=${content}")
+                when(page){
+                    0-> HomeUi()
+                    1-> ChooseCourseUi(text = content)
+                    2-> ChooseCourseUi(text = content)
+                    3-> ChooseCourseUi(text = content)
+                    4-> ChooseCourseUi(text = content)
+                }
             }
-               setSelectId(state.currentPage)
-        }
-        BottomTab(items = items,selectId = selectId){
-            setSelectId(it)
-            scope.launch { state.animateScrollToPage(it) }
+            BottomTab(items = items,state = state)
         }
     }
 }
