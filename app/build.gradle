@@ -60,8 +60,9 @@ dependencies {
 
     implementation "androidx.compose.material:material-icons-extended:$cur_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
-    implementation "com.google.accompanist:accompanist-pager:0.28.0"
-    implementation "com.google.accompanist:accompanist-pager-indicators:0.28.0"
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
     implementation "io.coil-kt:coil-compose:2.2.0"
 
     implementation "com.tencent:mmkv-static:1.2.7"

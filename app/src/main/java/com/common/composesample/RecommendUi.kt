@@ -1,43 +1,58 @@
 package com.common.composesample
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.accompanist.pager.ExperimentalPagerApi
 
 /**
  * @Author: Sun
  * @CreateDate: 2022/12/9
  * @Description: java类作用描述
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun RecommendUi(
     modifier: Modifier = Modifier.fillMaxSize(),
-    text: String
+    onArticleClick: (News)->Unit
 ){
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Column {
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.h1)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.h2)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.h3)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.h4)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.h5)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.h6)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.subtitle1)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.subtitle2)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.body1)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.body2)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.button)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.caption)
-            Text(text = text, color = Color.Black, style = MaterialTheme.typography.overline)
+    LazyColumn(modifier = modifier){
+        item {
+             AutoBanner()
+        }
+        items(news){
+            ItemNew(item = it){
+                onArticleClick(it)
+            }
+        }
+    }
+}
+
+@Composable
+fun ItemNew(
+    item: News,
+    onArticleClick: (News)->Unit
+) {
+    Column(modifier = Modifier
+        .clickable { onArticleClick(item) }
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp, vertical = 10.dp)) {
+        Text(text = item.title, style = MaterialTheme.typography.body1, maxLines = 2, overflow = TextOverflow.Ellipsis)
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = item.source, style = MaterialTheme.typography.body2, fontSize = 12.sp)
+            Text(text = item.time, style = MaterialTheme.typography.body2, fontSize = 12.sp)
         }
     }
 }

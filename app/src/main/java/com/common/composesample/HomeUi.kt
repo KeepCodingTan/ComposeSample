@@ -2,6 +2,7 @@ package com.common.composesample
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -36,35 +37,41 @@ import kotlinx.coroutines.launch
  */
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun HomeUi(){
+fun HomeUi(
+    onArticleClick: (News)->Unit,
+    onSearchClick: ()->Unit
+){
     Scaffold(
-        topBar = {SearchBar()},
+        topBar = {SearchBar(onSearchClick)},
     ) {
-        HomeContent()
+        HomeContent{onArticleClick(it)}
     }
 }
 
 @Composable
-fun SearchBar() {
-    val (text, updateText) = remember {
+fun SearchBar(
+    onSearchClick: ()->Unit
+) {
+    /*val (text, updateText) = remember {
         mutableStateOf("")
-    }
+    }*/
     Box(modifier = Modifier.background(MaterialTheme.colors.primary)
         .padding(start = 16.dp, top = 16.dp, end = 16.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             BasicTextField(
-                value = text,
-                onValueChange = updateText,
+                value = "新冠感染者初期症状 | 以岭药业公告",
+                onValueChange = {},
                 singleLine = true,
                 cursorBrush = SolidColor(MaterialTheme.colors.primary),
+                readOnly = true,
                 modifier = Modifier
                     .weight(1f)
                     .background(MaterialTheme.colors.primary),
                 decorationBox = { innerTextField ->
                     Row(
-                        modifier = Modifier.background(MaterialTheme.colors.background,RoundedCornerShape(8.dp)).padding(6.dp),
+                        modifier = Modifier.background(MaterialTheme.colors.background,RoundedCornerShape(8.dp)).padding(6.dp).clickable { onSearchClick() },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -90,7 +97,8 @@ fun SearchBar() {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HomeContent(
-    modifier: Modifier = Modifier.fillMaxSize()
+    modifier: Modifier = Modifier.fillMaxSize(),
+    onArticleClick: (News)->Unit
 ){
     val pageTitles = listOf("关注","推荐","探索","世界杯","发现","热榜","抗疫","每日必看")
     val pagerState = rememberPagerState(initialPage = 0)
@@ -116,7 +124,7 @@ fun HomeContent(
                         selected = index == pagerState.currentPage,
                         onClick = { scope.launch { pagerState.animateScrollToPage(index) } }
                     ) {
-                        Text(text = s,modifier = Modifier.padding(vertical = 8.dp), fontStyle = FontStyle.Italic, fontSize = 18.sp)
+                        Text(text = s,modifier = Modifier.padding(vertical = 8.dp), fontStyle = FontStyle.Italic, fontSize = 16.sp)
                     }
                 }
             }
@@ -125,7 +133,8 @@ fun HomeContent(
             val content = pageTitles[pagerState.currentPage]
             when(page){
                 0 -> FollowUi()
-                1 -> RecommendUi(text = content)
+                1 -> RecommendUi{onArticleClick(it)}
+                2 -> SearchUi(text = content)
                 else -> OtherUi(text = content)
             }
         }
