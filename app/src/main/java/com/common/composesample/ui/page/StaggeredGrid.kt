@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.ui.page
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

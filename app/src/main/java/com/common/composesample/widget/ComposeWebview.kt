@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.widget
 
 import android.annotation.SuppressLint
 import android.webkit.WebChromeClient

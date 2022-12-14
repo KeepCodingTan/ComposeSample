@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.ui.page
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,6 +11,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.common.composesample.widget.CoilImage
+import com.common.composesample.widget.ExploreImageContainer
+import com.common.composesample.entity.images
+import com.common.composesample.utils.timeFormat
 import com.common.composesample.ui.theme.color_backGround
 
 /**

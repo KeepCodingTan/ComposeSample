@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.ui.page
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.ui.page
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -29,6 +29,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.common.composesample.entity.ToDoIcon
+import com.common.composesample.entity.TodoItem
 
 /**
  * @Author: Sun

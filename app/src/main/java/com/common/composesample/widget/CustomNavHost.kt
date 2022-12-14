@@ -1,9 +1,12 @@
-package com.common.composesample
+package com.common.composesample.widget
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import com.common.composesample.ui.page.ArticleDetailUi
+import com.common.composesample.ui.page.MainUi
+import com.common.composesample.ui.page.SearchContent
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController

@@ -1,4 +1,7 @@
-package com.common.composesample
+package com.common.composesample.utils
+
+import com.common.composesample.entity.ToDoIcon
+import com.common.composesample.entity.TodoItem
 
 /**
  * @Author: Sun
@@ -6,7 +9,7 @@ package com.common.composesample
  * @Description: java类作用描述
  */
 
-fun generateTodoItem(): TodoItem{
+fun generateTodoItem(): TodoItem {
     val tasks = listOf(
         "随机添加一条数据",
         "你是真的很牛皮",

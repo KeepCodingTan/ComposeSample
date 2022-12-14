@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.ui.page
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -8,22 +8,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Scanner
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.common.composesample.ui.theme.color_999999
+import com.common.composesample.entity.News
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -42,7 +37,7 @@ fun HomeUi(
     onSearchClick: ()->Unit
 ){
     Scaffold(
-        topBar = {SearchBar(onSearchClick)},
+        topBar = { SearchBar(onSearchClick) },
     ) {
         HomeContent{onArticleClick(it)}
     }
@@ -124,7 +119,7 @@ fun HomeContent(
                         selected = index == pagerState.currentPage,
                         onClick = { scope.launch { pagerState.animateScrollToPage(index) } }
                     ) {
-                        Text(text = s,modifier = Modifier.padding(vertical = 8.dp), fontStyle = FontStyle.Italic, fontSize = 16.sp)
+                        Text(text = s,modifier = Modifier.padding(vertical = 8.dp).wrapContentWidth(), fontStyle = FontStyle.Italic, fontSize = 16.sp)
                     }
                 }
             }

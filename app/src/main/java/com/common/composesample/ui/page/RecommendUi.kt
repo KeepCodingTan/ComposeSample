@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.ui.page
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.common.composesample.widget.AutoBanner
+import com.common.composesample.entity.News
+import com.common.composesample.entity.news
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 /**

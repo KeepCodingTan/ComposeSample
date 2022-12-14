@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.base
 
 import android.app.Application
 import com.tencent.mmkv.MMKV

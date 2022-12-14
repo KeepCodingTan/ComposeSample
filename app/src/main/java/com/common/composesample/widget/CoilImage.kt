@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.widget
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

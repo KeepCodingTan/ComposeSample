@@ -1,9 +1,7 @@
-package com.common.composesample
+package com.common.composesample.ui.page
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,14 +14,14 @@ import androidx.compose.ui.graphics.Color
  * @Description: java类作用描述
  */
 @Composable
-fun OtherUi(
+fun ChooseCourseUi(
     modifier: Modifier = Modifier.fillMaxSize(),
-    text: String
+    text: String,
 ){
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        Text(text = text, color = Color.Black, style = MaterialTheme.typography.h3)
+        Text(text = text, color = Color.Black)
     }
 }

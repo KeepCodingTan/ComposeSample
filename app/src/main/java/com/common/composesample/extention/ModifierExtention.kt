@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.extention
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.calculateTargetValue

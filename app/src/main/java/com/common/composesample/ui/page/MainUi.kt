@@ -1,17 +1,17 @@
-package com.common.composesample
+package com.common.composesample.ui.page
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.common.composesample.entity.items
 import com.common.composesample.ui.theme.color_1973F4
 import com.common.composesample.ui.theme.color_999999
+import com.common.composesample.widget.Destination
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState

@@ -1,4 +1,4 @@
-package com.common.composesample
+package com.common.composesample.utils
 
 import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
