@@ -63,7 +63,13 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
     implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
     implementation "io.coil-kt:coil-compose:2.2.0"
+
+    implementation 'xyz.doikki.android.dkplayer:dkplayer-java:3.3.7'
+    implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'
+    implementation 'xyz.doikki.android.dkplayer:player-exo:3.3.7'
+    implementation 'xyz.doikki.android.dkplayer:player-ijk:3.3.7'
 
     implementation "com.tencent:mmkv-static:1.2.7"
 }

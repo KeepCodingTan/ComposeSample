@@ -34,12 +34,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeUi(
     onArticleClick: (News)->Unit,
-    onSearchClick: ()->Unit
+    onSearchClick: ()->Unit,
+    onVideoClick: ()->Unit
 ){
     Scaffold(
         topBar = { SearchBar(onSearchClick) },
     ) {
-        HomeContent{onArticleClick(it)}
+        HomeContent(
+            onArticleClick = {onArticleClick(it)},
+            onVideoClick = {onVideoClick()}
+        )
     }
 }
 
@@ -93,7 +97,8 @@ fun SearchBar(
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier.fillMaxSize(),
-    onArticleClick: (News)->Unit
+    onArticleClick: (News)->Unit,
+    onVideoClick: ()->Unit
 ){
     val pageTitles = listOf("关注","推荐","探索","世界杯","发现","热榜","抗疫","每日必看")
     val pagerState = rememberPagerState(initialPage = 0)
@@ -127,7 +132,7 @@ fun HomeContent(
         HorizontalPager(count = pageTitles.size, modifier = Modifier.weight(1f),state = pagerState) { page->
             val content = pageTitles[pagerState.currentPage]
             when(page){
-                0 -> FollowUi()
+                0 -> FollowUi{ onVideoClick() }
                 1 -> RecommendUi{onArticleClick(it)}
                 2 -> SearchUi(text = content)
                 else -> OtherUi(text = content)

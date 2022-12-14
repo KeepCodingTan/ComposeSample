@@ -51,7 +51,11 @@ fun MainUi(
         HorizontalPager(state = state,count = items.size, modifier = Modifier.padding(it)) { page->
             val content = items[state.currentPage].name
             when(page){
-                0-> HomeUi(onArticleClick = {navController.navigate(Destination.ArticleDetail.route)}, onSearchClick = { navController.navigate(Destination.SearchContent.route) })
+                0-> HomeUi(
+                    onArticleClick = { navController.navigate(Destination.ArticleDetail.route) },
+                    onSearchClick = { navController.navigate(Destination.SearchContent.route) },
+                    onVideoClick = { navController.navigate(Destination.VideoDetail.route) }
+                )
                 1-> ChooseCourseUi(text = content)
                 2-> ChooseCourseUi(text = content)
                 3-> ChooseCourseUi(text = content)

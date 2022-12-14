@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import com.common.composesample.ui.page.ArticleDetailUi
 import com.common.composesample.ui.page.MainUi
 import com.common.composesample.ui.page.SearchContent
+import com.common.composesample.ui.page.VideoDetailUi
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -65,6 +66,24 @@ fun CustomNavHost(){
         ){
             SearchContent(navController = navController)
         }
+
+        composable(
+            route = Destination.VideoDetail.route,
+            enterTransition = {
+                when(initialState.destination.route){
+                    Destination.MainUi.route -> slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(700))
+                    else -> null
+                }
+            },
+            exitTransition = {
+                when(initialState.destination.route){
+                    Destination.VideoDetail.route -> slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(700))
+                    else -> null
+                }
+            },
+        ){
+            VideoDetailUi(navController = navController)
+        }
     }
 }
 
@@ -72,4 +91,5 @@ sealed class Destination(val route: String){
     object MainUi: Destination("MainUi")
     object ArticleDetail: Destination("ArticleDetail")
     object SearchContent: Destination("SearchContent")
+    object VideoDetail: Destination("VideoDetail")
 }
