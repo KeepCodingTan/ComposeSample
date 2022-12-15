@@ -1,16 +1,19 @@
 package com.common.composesample.widget
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videocontroller.component.*
 import xyz.doikki.videoplayer.player.VideoView
@@ -23,13 +26,20 @@ import xyz.doikki.videoplayer.player.VideoView
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ComposePlayer(
-    videoState: VideoConfigState = rememberVideoConfigState(),
-    path: String = "http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4"
+    videoState: VideoConfigState
 ){
-    var playerView: VideoView? = null
+    var playerView by remember {
+        mutableStateOf<VideoView?>(null)
+    }
     Box(modifier = Modifier
         .fillMaxWidth()
-        .wrapContentHeight()) {
+        .wrapContentHeight()
+    ) {
+        LaunchedEffect(videoState){
+            with(videoState){
+                playerView?.handleEvents()
+            }
+        }
         DisposableEffect(Unit){
             onDispose {
                 Log.d("sun","onDispose")
@@ -49,44 +59,101 @@ fun ComposePlayer(
                     addControlComponent(VodControlView(context)) //点播控制条
                     addControlComponent(GestureView(context)) //滑动控制视图
                 }
-                playerView = VideoView(context).apply {
+                VideoView(context).apply {
                     setVideoController(controller)
-                    setUrl(path)
-                    start()
+                }.also {
+                    playerView = it
                 }
                 playerView!!
             },
             modifier = Modifier.wrapContentHeight(),
-            update = {
-                it.speed = videoState.speed
-                when(videoState.ratio){
-                    0-> it.setScreenScaleType(VideoView.SCREEN_SCALE_DEFAULT)
-                    1-> it.setScreenScaleType(VideoView.SCREEN_SCALE_16_9)
-                    2-> it.setScreenScaleType(VideoView.SCREEN_SCALE_4_3)
-                    3-> it.setScreenScaleType(VideoView.SCREEN_SCALE_ORIGINAL)
-                    4-> it.setScreenScaleType(VideoView.SCREEN_SCALE_MATCH_PARENT)
-                    5-> it.setScreenScaleType(VideoView.SCREEN_SCALE_CENTER_CROP)
-                }
+        ){ videoView ->
+            videoState.config.let {
+                videoView.setUrl(it)
+                videoView.start()
             }
-        )
+        }
     }
 }
 
 @Composable
 fun rememberVideoConfigState(
-    ratio: Int = 0,
-    speed: Float = 1f,
-):VideoConfigState{
-    return remember(ratio,speed) {
-        VideoConfigState(
-            ratio = ratio,
-            speed = speed
-        )
-    }
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    path: String,
+    onShot: (Bitmap)->Unit = {},
+    isMute: (Boolean) -> Unit = {}
+) = remember(key1 = path) {
+    VideoConfigState(coroutineScope,path,onShot,isMute)
 }
 
-@Stable
-class VideoConfigState(
-    var ratio: Int,
-    var speed: Float,
-)
+class VideoConfigState(private val coroutineScope: CoroutineScope,path: String,val onShot: (Bitmap)->Unit,val isMute:(Boolean)->Unit){
+    var config by mutableStateOf(path)
+    var curRatio by mutableStateOf(0)
+    var curSpeed by mutableStateOf(2)
+
+    enum class EventType{
+        CHANGE_RATIO,
+        CHANGE_SPEED,
+        CHANGE_MUTE,
+        MIRROR_ROTATE,
+        SHOT_SCREEN
+    }
+
+    class Event(val type: EventType,val ratio: Int = 0,val speed: Float = 0f)
+
+    private val events: MutableSharedFlow<Event> = MutableSharedFlow()
+
+    private var i: Int = 0
+
+    suspend fun VideoView.handleEvents(): Bitmap = withContext(Dispatchers.Main){
+        events.collect{
+            when(it.type){
+                EventType.CHANGE_RATIO -> setScreenScaleType(it.ratio)
+                EventType.CHANGE_SPEED -> speed = it.speed
+                EventType.CHANGE_MUTE -> {
+                    isMute = !isMute
+                    isMute(isMute)
+                }
+                EventType.MIRROR_ROTATE -> {
+                    setMirrorRotation(i % 2 == 0)
+                    i++
+                }
+                EventType.SHOT_SCREEN -> { onShot(doScreenShot()) }
+            }
+        }
+    }
+
+    fun setScreenScaleType(ratio: Int){
+        val event = Event(EventType.CHANGE_RATIO,ratio = ratio)
+        curRatio = ratio
+        coroutineScope.launch { events.emit(event) }
+    }
+
+    fun setSpeed(speed: Float){
+        val event = Event(EventType.CHANGE_SPEED, speed = speed)
+        curSpeed = when (speed) {
+            0.5f -> 0
+            0.75f -> 1
+            1f -> 2
+            1.5f -> 3
+            2f -> 4
+            else -> 2
+        }
+        coroutineScope.launch { events.emit(event) }
+    }
+
+    fun changeMute(){
+        val event = Event(EventType.CHANGE_MUTE)
+        coroutineScope.launch { events.emit(event) }
+    }
+
+    fun mirrorRotate(){
+        val event = Event(EventType.MIRROR_ROTATE)
+        coroutineScope.launch { events.emit(event) }
+    }
+
+    fun onShotScreen(){
+        val event = Event(EventType.SHOT_SCREEN)
+        coroutineScope.launch { events.emit(event) }
+    }
+}

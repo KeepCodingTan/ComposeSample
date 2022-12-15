@@ -1,10 +1,14 @@
 package com.common.composesample.ui.page
 
+import android.graphics.Bitmap
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.common.composesample.widget.ComposePlayer
@@ -12,7 +16,6 @@ import com.common.composesample.widget.CustomTopbar
 import com.common.composesample.widget.VideoConfigState
 import com.common.composesample.widget.rememberVideoConfigState
 import kotlinx.coroutines.launch
-import kotlin.math.absoluteValue
 
 /**
  * @Author: Sun
@@ -26,7 +29,21 @@ fun VideoDetailUi(
 ){
     val scaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
-    val videoState = rememberVideoConfigState()
+    var bitmapState = remember{
+        mutableStateOf<Bitmap>(Bitmap.createBitmap(10,10,Bitmap.Config.ALPHA_8))
+    }
+    var isMuteState = remember {
+        mutableStateOf(false)
+    }
+    val videoState = rememberVideoConfigState(
+        path = "http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4",
+        onShot = {
+            bitmapState.value = it
+        },
+        isMute = {
+            isMuteState.value = it
+        }
+    )
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         topBar = { CustomTopbar("视频详情",{
@@ -38,17 +55,29 @@ fun VideoDetailUi(
                 }
             }
         }){ navController.popBackStack() } },
-        sheetContent = { VideoConfigSheet(videoState) },
+        sheetContent = { VideoConfigSheet(videoState,isMuteState) },
         sheetPeekHeight = 0.dp
     ) {
-        ComposePlayer(videoState = videoState)
+        Column {
+            ComposePlayer(videoState = videoState)
+            Image(bitmap = bitmapState.value.asImageBitmap(), contentDescription = "")
+        }
     }
 }
 
 @Composable
 fun VideoConfigSheet(
-    videoState: VideoConfigState
+    videoState: VideoConfigState,
+    isMuteState: MutableState<Boolean>
 ){
+    val buttonColors = mutableListOf(Color.LightGray,Color.LightGray,Color.LightGray,Color.LightGray,Color.LightGray,Color.LightGray)
+    val buttonColors1 = mutableListOf(Color.LightGray,Color.LightGray,Color.LightGray,Color.LightGray,Color.LightGray)
+    repeat(6){
+        buttonColors[it] = if(videoState.curRatio == it) Color.Cyan else Color.LightGray
+    }
+    repeat(5){
+        buttonColors1[it] = if(videoState.curSpeed == it) Color.Cyan else Color.LightGray
+    }
     Column(modifier = Modifier
         .fillMaxWidth()
         .wrapContentHeight()
@@ -58,13 +87,13 @@ fun VideoConfigSheet(
             .fillMaxWidth()
             .padding(bottom = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween) {
-            TextButton(onClick = { videoState.ratio = 0 }) {
+            TextButton(onClick = { videoState.setScreenScaleType(0) }, colors = ButtonDefaults.buttonColors(buttonColors[0])) {
                 Text(text = "默认")
             }
-            TextButton(onClick = { videoState.ratio = 1 }) {
+            TextButton(onClick = { videoState.setScreenScaleType(1) }, colors = ButtonDefaults.buttonColors(buttonColors[1])) {
                 Text(text = "16:9")
             }
-            TextButton(onClick = { videoState.ratio =2 }) {
+            TextButton(onClick = { videoState.setScreenScaleType(2) }, colors = ButtonDefaults.buttonColors(buttonColors[2])) {
                 Text(text = "4:3")
             }
         }
@@ -72,13 +101,13 @@ fun VideoConfigSheet(
             .fillMaxWidth()
             .padding(bottom = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween) {
-            TextButton(onClick = { videoState.ratio = 3 }) {
+            TextButton(onClick = { videoState.setScreenScaleType(3) }, colors = ButtonDefaults.buttonColors(buttonColors[3])) {
                 Text(text = "原始")
             }
-            TextButton(onClick = { videoState.ratio = 4 }) {
+            TextButton(onClick = { videoState.setScreenScaleType(4) }, colors = ButtonDefaults.buttonColors(buttonColors[4])) {
                 Text(text = "填充")
             }
-            TextButton(onClick = { videoState.ratio = 5 }) {
+            TextButton(onClick = { videoState.setScreenScaleType(5) }, colors = ButtonDefaults.buttonColors(buttonColors[5])) {
                 Text(text = "居中裁剪")
             }
         }
@@ -87,19 +116,19 @@ fun VideoConfigSheet(
             .fillMaxWidth()
             .padding(bottom = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween) {
-            TextButton(onClick = { videoState.speed = 0.5f }) {
+            TextButton(onClick = { videoState.setSpeed(0.5f) },colors = ButtonDefaults.buttonColors(buttonColors1[0])) {
                 Text(text = "0.5")
             }
-            TextButton(onClick = { videoState.speed = 0.75f }) {
+            TextButton(onClick = { videoState.setSpeed(0.75f) },colors = ButtonDefaults.buttonColors(buttonColors1[1])) {
                 Text(text = "0.75")
             }
-            TextButton(onClick = { videoState.speed = 1.0f }) {
+            TextButton(onClick = { videoState.setSpeed(1.0f) },colors = ButtonDefaults.buttonColors(buttonColors1[2])) {
                 Text(text = "1.0")
             }
-            TextButton(onClick = { videoState.speed = 1.5f }) {
+            TextButton(onClick = { videoState.setSpeed(1.5f) },colors = ButtonDefaults.buttonColors(buttonColors1[3])) {
                 Text(text = "1.5")
             }
-            TextButton(onClick = { videoState.speed = 2.0f }) {
+            TextButton(onClick = { videoState.setSpeed(2.0f) },colors = ButtonDefaults.buttonColors(buttonColors1[4])) {
                 Text(text = "2.0")
             }
         }
@@ -108,13 +137,13 @@ fun VideoConfigSheet(
             .fillMaxWidth()
             .padding(bottom = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween) {
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = { videoState.mirrorRotate() },colors = ButtonDefaults.buttonColors(Color.LightGray)) {
                 Text(text = "镜像旋转")
             }
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = { videoState.onShotScreen() },colors = ButtonDefaults.buttonColors(Color.LightGray)) {
                 Text(text = "截图")
             }
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = { videoState.changeMute() },colors = ButtonDefaults.buttonColors(if(isMuteState.value)Color.Cyan else Color.LightGray)) {
                 Text(text = "静音")
             }
         }
