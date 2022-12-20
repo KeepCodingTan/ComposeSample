@@ -1,7 +1,6 @@
 package com.common.composesample.ui.page
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -35,6 +34,9 @@ fun VideoDetailUi(
     var isMuteState = remember {
         mutableStateOf(false)
     }
+    var isFullScreen = remember {
+        mutableStateOf(false)
+    }
     val videoState = rememberVideoConfigState(
         path = "http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4",
         onShot = {
@@ -46,20 +48,26 @@ fun VideoDetailUi(
     )
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
-        topBar = { CustomTopbar("视频详情",{
-            scope.launch {
-                if(scaffoldState.bottomSheetState.isCollapsed){
-                    scaffoldState.bottomSheetState.expand()
-                }else{
-                    scaffoldState.bottomSheetState.collapse()
-                }
+        topBar = {
+            if (!isFullScreen.value) {
+                CustomTopbar("视频详情", {
+                    scope.launch {
+                        if (scaffoldState.bottomSheetState.isCollapsed) {
+                            scaffoldState.bottomSheetState.expand()
+                        } else {
+                            scaffoldState.bottomSheetState.collapse()
+                        }
+                    }
+                }) { navController.popBackStack() }
             }
-        }){ navController.popBackStack() } },
-        sheetContent = { VideoConfigSheet(videoState,isMuteState) },
+        },
+        sheetContent = { VideoConfigSheet(videoState, isMuteState) },
         sheetPeekHeight = 0.dp
     ) {
         Column {
-            ComposePlayer(videoState = videoState)
+            ComposePlayer(videoState = videoState) {
+                isFullScreen.value = it
+            }
             Image(bitmap = bitmapState.value.asImageBitmap(), contentDescription = "")
         }
     }

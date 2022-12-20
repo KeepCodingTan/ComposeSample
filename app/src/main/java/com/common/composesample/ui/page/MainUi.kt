@@ -59,7 +59,7 @@ fun MainUi(
                 1-> ChooseCourseUi(text = content)
                 2-> ChooseCourseUi(text = content)
                 3-> ChooseCourseUi(text = content)
-                4-> ChooseCourseUi(text = content)
+                4-> MineUi()
             }
         }
     }

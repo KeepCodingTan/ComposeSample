@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.common.composesample.entity.News
+import com.common.composesample.entity.VideoItem
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeUi(
-    onArticleClick: (News)->Unit,
+    onArticleClick: (VideoItem)->Unit,
     onSearchClick: ()->Unit,
     onVideoClick: ()->Unit
 ){
@@ -97,7 +97,7 @@ fun SearchBar(
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier.fillMaxSize(),
-    onArticleClick: (News)->Unit,
+    onArticleClick: (VideoItem)->Unit,
     onVideoClick: ()->Unit
 ){
     val pageTitles = listOf("关注","推荐","探索","世界杯","发现","热榜","抗疫","每日必看")

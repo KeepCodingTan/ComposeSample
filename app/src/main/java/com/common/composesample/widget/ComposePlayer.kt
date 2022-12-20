@@ -3,10 +3,13 @@ package com.common.composesample.widget
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.util.Log
+import android.widget.ImageView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.coroutines.CoroutineScope
@@ -14,8 +17,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import xyz.doikki.videocontroller.R
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videocontroller.component.*
+import xyz.doikki.videoplayer.player.BaseVideoView
 import xyz.doikki.videoplayer.player.VideoView
 
 /**
@@ -26,33 +31,47 @@ import xyz.doikki.videoplayer.player.VideoView
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ComposePlayer(
-    videoState: VideoConfigState
+    videoState: VideoConfigState,
+    isFullScreen: (Boolean)->Unit = {}
 ){
     var playerView by remember {
         mutableStateOf<VideoView?>(null)
+    }
+    val positionSaver = listSaver<Long,Long>(
+        save = { listOf(it) },
+        restore = { it[0] }
+    )
+    val curPosition = rememberSaveable(stateSaver = positionSaver) {
+        mutableStateOf(0L)
+    }
+    Log.d("ccc","curPosition = ${curPosition.value}")
+    LaunchedEffect(videoState){
+        with(videoState){
+            playerView?.handleEvents()
+        }
+    }
+    DisposableEffect(Unit){
+        onDispose {
+            Log.d("sun","onDispose")
+            playerView?.let {
+                it.release()
+            }
+        }
     }
     Box(modifier = Modifier
         .fillMaxWidth()
         .wrapContentHeight()
     ) {
-        LaunchedEffect(videoState){
-            with(videoState){
-                playerView?.handleEvents()
-            }
-        }
-        DisposableEffect(Unit){
-            onDispose {
-                Log.d("sun","onDispose")
-                playerView?.let {
-                    it.release()
-                }
-            }
-        }
         AndroidView(
             factory = { context ->
                 val controller = StandardVideoController(context).apply {
                     setEnableOrientation(true) //根据屏幕方向自动进入/退出全屏
-                    addControlComponent(PrepareView(context)) //准备播放界面
+                    val prepareView = PrepareView(context)
+                    (prepareView.findViewById<ImageView>(R.id.start_play)).setOnClickListener {
+                        playerView?.seekTo(curPosition.value)
+                        playerView?.start()
+                    }
+                    addControlComponent(prepareView) //准备播放界面
                     addControlComponent(CompleteView(context)) //自动完成播放界面
                     addControlComponent(ErrorView(context)) //错误界面
                     addControlComponent(TitleView(context)) //标题栏
@@ -66,11 +85,39 @@ fun ComposePlayer(
                 }
                 playerView!!
             },
-            modifier = Modifier.wrapContentHeight(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
         ){ videoView ->
+            videoView.addOnStateChangeListener(object :BaseVideoView.OnStateChangeListener{
+                override fun onPlayerStateChanged(playerState: Int) {
+                    Log.d("ccc","change=${videoView.currentPosition}")
+                    when(playerState){
+                        VideoView.PLAYER_NORMAL -> {
+                            Log.d("ccc","PLAYER_NORMAL进来了")
+                            curPosition.value = videoView.currentPosition
+                            isFullScreen(false)
+                        }
+                        VideoView.PLAYER_FULL_SCREEN -> {
+                            Log.d("ccc","PLAYER_FULL_SCREEN进来了")
+                            curPosition.value = videoView.currentPosition
+                            isFullScreen(true)
+                        }
+                    }
+                }
+
+                override fun onPlayStateChanged(playState: Int) {
+                    when(playState){
+                        VideoView.STATE_PREPARED -> {
+//                            Log.d("ccc","移动到 = ${curPosition.value}")
+//                            videoView.seekTo(curPosition.value)
+//                            videoView.start()
+                        }
+                    }
+                }
+            })
             videoState.config.let {
                 videoView.setUrl(it)
-                videoView.start()
             }
         }
     }

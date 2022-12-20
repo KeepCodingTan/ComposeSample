@@ -7,14 +7,20 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.common.composesample.entity.VideoItem
+import com.common.composesample.viewmodel.NewViewModel
 import com.common.composesample.widget.AutoBanner
-import com.common.composesample.entity.News
-import com.common.composesample.entity.news
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.launch
 
 /**
  * @Author: Sun
@@ -25,15 +31,28 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @Composable
 fun RecommendUi(
     modifier: Modifier = Modifier.fillMaxSize(),
-    onArticleClick: (News)->Unit
+    newsModel: NewViewModel = viewModel(),
+    onArticleClick: (VideoItem)->Unit
 ){
-    LazyColumn(modifier = modifier){
-        item {
-             AutoBanner()
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(Unit){
+        newsModel.getNewList()
+    }
+    val refreshState = rememberSwipeRefreshState(isRefreshing = newsModel.isRefresh)
+    SwipeRefresh(
+        state = refreshState,
+        onRefresh = {
+            scope.launch { newsModel.getNewList() }
         }
-        items(news){
-            ItemNew(item = it){
-                onArticleClick(it)
+    ) {
+        LazyColumn(modifier = modifier){
+            item {
+                AutoBanner()
+            }
+            items(newsModel.news){
+                ItemNew(item = it){
+                    onArticleClick(it)
+                }
             }
         }
     }
@@ -41,8 +60,8 @@ fun RecommendUi(
 
 @Composable
 fun ItemNew(
-    item: News,
-    onArticleClick: (News)->Unit
+    item: VideoItem,
+    onArticleClick: (VideoItem)->Unit
 ) {
     Column(modifier = Modifier
         .clickable { onArticleClick(item) }
