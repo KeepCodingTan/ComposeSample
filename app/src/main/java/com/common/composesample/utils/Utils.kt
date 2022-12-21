@@ -2,6 +2,7 @@ package com.common.composesample.utils
 
 import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
+import java.util.regex.Pattern
 
 /**
  * @Author: Sun
@@ -12,4 +13,12 @@ import java.text.SimpleDateFormat
 @SuppressLint("SimpleDateFormat")
 fun timeFormat(time: Long): String{
     return SimpleDateFormat("yy-MM-dd hh-mm-ss").format(time)
+}
+
+fun searchMatchStr(content: String?, regex: String?): String {
+    val pattern = Pattern.compile(regex)
+    val matcher = pattern.matcher(content)
+    return if (matcher.find()) {
+        matcher.group()
+    } else ""
 }

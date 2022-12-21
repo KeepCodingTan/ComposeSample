@@ -4,6 +4,7 @@ import android.app.Application
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.common.composesample.Constants
+import com.common.composesample.utils.searchMatchStr
 import com.common.libnet.NetWorkManager
 import com.common.libnet.inter.NetWorkInterface
 import com.tencent.mmkv.MMKV
@@ -51,7 +52,25 @@ class MyApp:Application() {
             }
 
             override fun httpLog(log: String?) {
-                log?.let { LogUtils.d(it) }
+                log?.let {
+                    val maxSize = 666
+                    if (it.length < maxSize) {
+                        LogUtils.d(it)
+                    } else {
+                        val header: String = searchMatchStr(it, Constants.REGEX)
+                        var index = 0
+                        while (index + maxSize < it.length) {
+                            val content: String = it.substring(index, index + maxSize)
+                            if (index != 0) {
+                                LogUtils.d(header+"\n"+content)
+                            } else {
+                                LogUtils.d(content)
+                            }
+                            index += maxSize
+                        }
+                        LogUtils.d(header+"\n"+it.substring(index))
+                    }
+                }
             }
 
             override fun toast(message: String?) {

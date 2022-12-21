@@ -62,7 +62,6 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
     implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
-    implementation "io.coil-kt:coil-compose:2.2.0"
 
     implementation 'xyz.doikki.android.dkplayer:dkplayer-java:3.3.7'
     implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'
@@ -73,6 +72,7 @@ dependencies {
     implementation "com.kunminx.arch:unpeek-livedata:$project.unpeek_version"
 //    implementation "com.common.tan:libnet:1.0.9"
     implementation "com.github.KeepCodingTan.CommonSun:libnet:kt_1.0.6"
+    implementation "io.coil-kt:coil-compose:2.2.0"
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
@@ -83,4 +83,5 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     // Lifecycles only (without ViewModel or LiveData)
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+    implementation "androidx.paging:paging-compose:1.0.0-alpha17"
 }

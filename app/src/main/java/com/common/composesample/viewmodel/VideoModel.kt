@@ -1,14 +1,18 @@
 package com.common.composesample.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.common.composesample.Constants
 import com.common.composesample.api.ApiService
 import com.common.composesample.entity.VideoItem
+import com.common.composesample.paging.DataSource
 import com.common.composesample.repository.ComposeRepository
 import com.common.libnet.RetrofitManager
-import com.common.libnet.data.PackageResponse
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @Author: Sun
@@ -19,7 +23,7 @@ class VideoModel: ViewModel() {
 
     private val repository = ComposeRepository(RetrofitManager.createService(ApiService::class.java))
 
-    var list by mutableStateOf(listOf<VideoItem>())
+    /*var list by mutableStateOf(listOf<VideoItem>())
         private set
 
     var isRefresh by mutableStateOf(false)
@@ -35,6 +39,15 @@ class VideoModel: ViewModel() {
                 isRefresh = false
             }
         }
-    }
+    }*/
+
+    val videoList: Flow<PagingData<VideoItem>> = Pager(
+        config = PagingConfig(
+            pageSize = Constants.PAGE_SIZE,
+            prefetchDistance = 1,
+            initialLoadSize = Constants.INITIAL_SIZE
+        ),
+        pagingSourceFactory = { DataSource(repository) }
+    ).flow.cachedIn(viewModelScope)
 
 }

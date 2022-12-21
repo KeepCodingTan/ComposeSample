@@ -1,7 +1,6 @@
 package com.common.composesample.repository
 
 import com.common.composesample.api.ApiService
-import com.common.composesample.entity.VideoBean
 import com.common.libnet.ktx.httCall
 
 /**
@@ -11,8 +10,8 @@ import com.common.libnet.ktx.httCall
  */
 class ComposeRepository(private val service: ApiService) {
 
-    suspend fun getVideoList() = httCall {
-        service.getVideoList()
+    suspend fun getVideoList(pageSize: Int,pageNo: Int) = httCall {
+        service.getVideoList(pageSize,pageNo)
     }
 
     suspend fun getNewList() = httCall {

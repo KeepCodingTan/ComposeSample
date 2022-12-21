@@ -14,6 +14,7 @@ import com.common.composesample.ui.page.TodoScreen
 import com.common.composesample.ui.theme.*
 import com.common.composesample.viewmodel.TodoViewModel
 import com.common.composesample.widget.CustomNavHost
+import com.common.composesample.widget.LoadingMore
 import com.tencent.mmkv.MMKV
 
 class MainActivity : ComponentActivity() {
@@ -77,6 +78,6 @@ fun Test() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    Test()
+    LoadingMore()
 }
 

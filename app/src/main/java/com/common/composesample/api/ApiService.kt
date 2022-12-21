@@ -3,6 +3,7 @@ package com.common.composesample.api
 import com.common.composesample.entity.VideoBean
 import com.common.libnet.data.BaseResponse
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 /**
  * @Author: Sun
@@ -12,7 +13,10 @@ import retrofit2.http.GET
 interface ApiService {
 
     @GET("user/videoList")
-    suspend fun getVideoList(): BaseResponse<VideoBean>
+    suspend fun getVideoList(
+        @Query("pageSize") pageSize: Int,
+        @Query("pageNo") pageNo: Int
+    ): BaseResponse<VideoBean>
 
     @GET("user/news")
     suspend fun getNewList(): BaseResponse<VideoBean>
