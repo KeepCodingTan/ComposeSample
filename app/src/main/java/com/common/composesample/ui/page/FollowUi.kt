@@ -5,16 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.LoadState
@@ -26,6 +24,7 @@ import com.common.composesample.widget.CoilImage
 import com.common.composesample.widget.ExploreImageContainer
 import com.common.composesample.entity.images
 import com.common.composesample.ui.theme.color_backGround
+import com.common.composesample.ui.theme.color_red
 import com.common.composesample.widget.LoadingMore
 
 /**
@@ -39,7 +38,7 @@ fun FollowUi(
     modifier: Modifier = Modifier
         .fillMaxSize()
         .background(color_backGround)
-        .padding(16.dp),
+        .padding(10.dp),
     videoModel: VideoModel = viewModel(),
     onVideoClick: ()->Unit = {}
 ){
@@ -47,7 +46,7 @@ fun FollowUi(
     val isRefreshing = pagingItems.loadState.refresh == LoadState.Loading
     val refreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = { pagingItems.refresh() })
     Surface(
-        modifier = Modifier.pullRefresh(refreshState)
+        modifier = modifier.pullRefresh(refreshState)
     ) {
         LazyColumn(
             modifier = modifier
@@ -82,26 +81,29 @@ fun FollowUi(
 @Composable
 fun ItemFollow(
     item: VideoItem,
-    onVideoClick:()->Unit
+    modifier: Modifier = Modifier
+        .clickable { onVideoClick() }
+        .background(MaterialTheme.colors.background, RoundedCornerShape(8.dp))
+        .padding(6.dp),
+    onVideoClick:()->Unit,
 ){
     Surface(
-      modifier = Modifier
-          .background(MaterialTheme.colors.background, RoundedCornerShape(8.dp))
-          .clickable { onVideoClick() }
-          .padding(10.dp)
+      modifier = modifier
     ) {
-        Column {
-            Text(text = item.title, style = MaterialTheme.typography.body1)
+        Column(
+            modifier = modifier
+        ) {
+            Text(text = item.title, style = MaterialTheme.typography.body1,color = Color.Black)
             Spacer(modifier = Modifier.height(8.dp))
             ExploreImageContainer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-            ){
-                CoilImage(images[item.image%24])
+            ) {
+                CoilImage(images[item.image % 24])
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "发布时间：${item.time}", style = MaterialTheme.typography.body2)
+            Text(text = "发布时间：${item.time}", style = MaterialTheme.typography.body2, color = Color.Black)
         }
     }
     Spacer(modifier = Modifier.height(10.dp))

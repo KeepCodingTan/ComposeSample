@@ -5,8 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -15,35 +14,34 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = color_1973F4,
-    primaryVariant = color_999999,
-    secondary = Teal200,
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
+    primary = color_default,
+    onPrimary = color_white,
+    background = color_white,
+    onBackground = color_default
 )
 
 //红色主题色值
 private val RedThemeColors = lightColors(
-    primary = Color(0xFFFF4040),
-    background = Color(0x66FF4040)
+    primary = color_red,
+    onPrimary = color_white,
+    background = color_white,
+    onBackground = color_red
 )
 
 //黄色主题色值
 private val YellowThemeColors = lightColors(
-    primary = Color(0xFFDAA520),
-    background = Color(0x66FFD700)
+    primary = color_yellow,
+    onPrimary = color_white,
+    background = color_white,
+    onBackground = color_yellow
 )
 
 //蓝色主题色值
 private val BlueThemeColors = lightColors(
-    primary = Color(0xFF436EEE),
-    background = Color(0x6600FFFF)
+    primary = color_blue,
+    onPrimary = color_white,
+    background = color_white,
+    onBackground = color_blue
 )
 
 @Composable
@@ -67,10 +65,11 @@ fun ComposeSampleTheme(
 
 @Composable
 fun CustomTheme(
-    chooseThemeid: MutableState<String>,
+    chooseThemeid: String,
     content: @Composable ()->Unit
 ){
-    val colors = when(chooseThemeid.value){
+    val systemUiController = rememberSystemUiController()
+    val colors = when(chooseThemeid){
         ThemeKinds.DEFAULT.name -> LightColorPalette
         ThemeKinds.BLUE.name -> BlueThemeColors
         ThemeKinds.RED.name -> RedThemeColors
@@ -78,13 +77,15 @@ fun CustomTheme(
         else -> LightColorPalette
     }
 
-    val shape = when(chooseThemeid.value){
+    val shape = when(chooseThemeid){
         ThemeKinds.DEFAULT.name -> Shapes
         ThemeKinds.BLUE.name -> Shapes
         ThemeKinds.RED.name -> Shapes1
         ThemeKinds.YELLOW.name -> Shapes1
         else -> Shapes1
     }
+
+    systemUiController.setSystemBarsColor(color = colors.primary)
 
     MaterialTheme(
         colors = colors,

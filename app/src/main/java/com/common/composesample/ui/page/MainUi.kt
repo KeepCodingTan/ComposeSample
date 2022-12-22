@@ -9,8 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import com.common.composesample.entity.items
-import com.common.composesample.ui.theme.color_1973F4
-import com.common.composesample.ui.theme.color_999999
+import com.common.composesample.ui.theme.ThemeKinds
 import com.common.composesample.widget.Destination
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -26,13 +25,15 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun MainUi(
-    navController: NavHostController
+    navController: NavHostController,
+    chooseThemeId: String,
+    themeChoose: (ThemeKinds)->Unit
 ){
     val state = rememberPagerState(initialPage = 0)
     val scope = rememberCoroutineScope()
     Scaffold(bottomBar = {
         BottomNavigation(
-            backgroundColor = MaterialTheme.colors.background
+            backgroundColor = MaterialTheme.colors.primary
         ) {
             items.forEachIndexed { index, bottomData ->
                 BottomNavigationItem(
@@ -41,20 +42,20 @@ fun MainUi(
                     icon = {
                         Icon(painter = painterResource(id = bottomData.defaultIcon), contentDescription = bottomData.name)
                     },
-                    label = { Text(text = bottomData.name) },
-                    selectedContentColor = color_1973F4,
-                    unselectedContentColor = color_999999
+                    label = { Text(text = bottomData.name) }
                 )
             }
         }
-    }) {
+    }) { it ->
         HorizontalPager(state = state,count = items.size, modifier = Modifier.padding(it)) { page->
             val content = items[state.currentPage].name
             when(page){
                 0-> HomeUi(
                     onArticleClick = { navController.navigate(Destination.ArticleDetail.route) },
                     onSearchClick = { navController.navigate(Destination.SearchContent.route) },
-                    onVideoClick = { navController.navigate(Destination.VideoDetail.route) }
+                    onVideoClick = { navController.navigate(Destination.VideoDetail.route) },
+                    chooseThemeId = chooseThemeId,
+                    themeChoose = { theme-> themeChoose(theme) }
                 )
                 1-> ChooseCourseUi(text = content)
                 2-> ChooseCourseUi(text = content)

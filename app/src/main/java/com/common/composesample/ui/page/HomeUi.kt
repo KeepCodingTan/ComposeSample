@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.common.composesample.entity.VideoItem
+import com.common.composesample.ui.theme.ThemeKinds
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -35,10 +36,16 @@ import kotlinx.coroutines.launch
 fun HomeUi(
     onArticleClick: (VideoItem)->Unit,
     onSearchClick: ()->Unit,
-    onVideoClick: ()->Unit
+    onVideoClick: ()->Unit,
+    chooseThemeId: String,
+    themeChoose: (ThemeKinds)->Unit
 ){
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
     Scaffold(
-        topBar = { SearchBar(onSearchClick) },
+        scaffoldState = scaffoldState,
+        topBar = { SearchBar(onSearchClick, openDrawer = { scope.launch { scaffoldState.drawerState.open() } }) },
+        drawerContent = { DrawerContent(chooseThemeId){ themeChoose(it) } }
     ) {
         HomeContent(
             onArticleClick = {onArticleClick(it)},
@@ -49,12 +56,14 @@ fun HomeUi(
 
 @Composable
 fun SearchBar(
-    onSearchClick: ()->Unit
+    onSearchClick: ()->Unit,
+    openDrawer: ()->Unit
 ) {
     /*val (text, updateText) = remember {
         mutableStateOf("")
     }*/
-    Box(modifier = Modifier.background(MaterialTheme.colors.primary)
+    Box(modifier = Modifier
+        .background(MaterialTheme.colors.primary)
         .padding(start = 16.dp, top = 16.dp, end = 16.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -70,7 +79,10 @@ fun SearchBar(
                     .background(MaterialTheme.colors.primary),
                 decorationBox = { innerTextField ->
                     Row(
-                        modifier = Modifier.background(MaterialTheme.colors.background,RoundedCornerShape(8.dp)).padding(6.dp).clickable { onSearchClick() },
+                        modifier = Modifier
+                            .background(MaterialTheme.colors.background, RoundedCornerShape(8.dp))
+                            .padding(6.dp)
+                            .clickable { onSearchClick() },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -83,12 +95,14 @@ fun SearchBar(
                 }
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                imageVector = Icons.Default.Notifications,
-                tint = MaterialTheme.colors.background,
-                modifier = Modifier.size(30.dp),
-                contentDescription = ""
-            )
+            IconButton(onClick = { openDrawer() }) {
+                Icon(
+                    imageVector = Icons.Default.Notifications,
+                    tint = MaterialTheme.colors.background,
+                    modifier = Modifier.size(30.dp),
+                    contentDescription = ""
+                )
+            }
         }
     }
 }
@@ -114,7 +128,7 @@ fun HomeContent(
         ) {
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
-                edgePadding = 16.dp,
+                edgePadding = 0.dp,
                 divider = {},
                 indicator = {
                     TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState,it))
@@ -125,7 +139,9 @@ fun HomeContent(
                         selected = index == pagerState.currentPage,
                         onClick = { scope.launch { pagerState.animateScrollToPage(index) } }
                     ) {
-                        Text(text = s,modifier = Modifier.padding(vertical = 8.dp).wrapContentWidth(), fontStyle = FontStyle.Italic, fontSize = 16.sp)
+                        Text(text = s,modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .wrapContentWidth(), fontStyle = FontStyle.Italic, fontSize = 16.sp)
                     }
                 }
             }

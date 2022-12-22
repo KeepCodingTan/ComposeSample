@@ -8,6 +8,7 @@ import com.common.composesample.ui.page.ArticleDetailUi
 import com.common.composesample.ui.page.MainUi
 import com.common.composesample.ui.page.SearchContent
 import com.common.composesample.ui.page.VideoDetailUi
+import com.common.composesample.ui.theme.ThemeKinds
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -19,7 +20,10 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun CustomNavHost(){
+fun CustomNavHost(
+    chooseThemeId: String,
+    themeChoose: (ThemeKinds)->Unit
+){
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
@@ -28,7 +32,7 @@ fun CustomNavHost(){
         composable(
             route = Destination.MainUi.route,
         ){
-            MainUi(navController = navController)
+            MainUi(navController = navController,chooseThemeId,themeChoose)
         }
 
         composable(

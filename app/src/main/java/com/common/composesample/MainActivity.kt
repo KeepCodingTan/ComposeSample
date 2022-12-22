@@ -5,11 +5,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEmotions
+import androidx.compose.material.icons.filled.PeopleAlt
+import androidx.compose.material.icons.filled.Poll
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.common.composesample.ui.page.DrawerContent
 import com.common.composesample.ui.page.TodoScreen
 import com.common.composesample.ui.theme.*
 import com.common.composesample.viewmodel.TodoViewModel
@@ -25,25 +31,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Test()
-        }
-    }
-
-
-    @Composable
-    fun TestTheme() {
-        val choosedThemeid = remember {
-            mutableStateOf(
-                MMKV.defaultMMKV()?.getString("themeId", ThemeKinds.DEFAULT.name)
-                    ?: ThemeKinds.DEFAULT.name
-            )
-        }
-        CustomTheme(
-            chooseThemeid = choosedThemeid
-        ) {
-            // A surface container using the 'background' color from the theme
-            SwitchTheme(choosedThemeid) {
-                TodoScreenUi()
-            }
         }
     }
 
@@ -64,20 +51,23 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Test() {
-    val choosedThemeid = remember {
+    val (chooseThemeId,setThemeId) = remember {
         mutableStateOf(
             MMKV.defaultMMKV()?.getString("themeId", ThemeKinds.DEFAULT.name)
                 ?: ThemeKinds.DEFAULT.name
         )
     }
-    CustomTheme(chooseThemeid = choosedThemeid) {
-        CustomNavHost()
+    CustomTheme(chooseThemeid = chooseThemeId) {
+        CustomNavHost(chooseThemeId){
+            setThemeId(it.name)
+            MMKV.defaultMMKV()?.encode("themeId",it.name)
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    LoadingMore()
+
 }
 

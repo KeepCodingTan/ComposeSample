@@ -14,8 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.common.composesample.ui.theme.color_1973F4
-import com.common.composesample.ui.theme.color_999999
+import com.common.composesample.ui.theme.color_white
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.launch
@@ -68,6 +67,6 @@ data class BottomData(
     val name: String,
     val selectIcon: Int,
     val defaultIcon: Int,
-    val selectColor: Color = color_1973F4,
-    val defaultColor: Color = color_999999
+    val selectColor: Color = color_white,
+    val defaultColor: Color = color_white
 )

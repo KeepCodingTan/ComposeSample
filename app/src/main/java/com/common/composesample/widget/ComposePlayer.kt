@@ -3,7 +3,6 @@ package com.common.composesample.widget
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.util.Log
-import android.widget.ImageView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -17,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import xyz.doikki.videocontroller.R
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videocontroller.component.*
 import xyz.doikki.videoplayer.player.BaseVideoView
@@ -66,12 +64,7 @@ fun ComposePlayer(
             factory = { context ->
                 val controller = StandardVideoController(context).apply {
                     setEnableOrientation(true) //根据屏幕方向自动进入/退出全屏
-                    val prepareView = PrepareView(context)
-                    (prepareView.findViewById<ImageView>(R.id.start_play)).setOnClickListener {
-                        playerView?.seekTo(curPosition.value)
-                        playerView?.start()
-                    }
-                    addControlComponent(prepareView) //准备播放界面
+                    addControlComponent(PrepareView(context)) //准备播放界面
                     addControlComponent(CompleteView(context)) //自动完成播放界面
                     addControlComponent(ErrorView(context)) //错误界面
                     addControlComponent(TitleView(context)) //标题栏
@@ -118,6 +111,8 @@ fun ComposePlayer(
             })
             videoState.config.let {
                 videoView.setUrl(it)
+                playerView?.seekTo(curPosition.value)
+                playerView?.start()
             }
         }
     }

@@ -62,6 +62,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
     implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
 
     implementation 'xyz.doikki.android.dkplayer:dkplayer-java:3.3.7'
     implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'
