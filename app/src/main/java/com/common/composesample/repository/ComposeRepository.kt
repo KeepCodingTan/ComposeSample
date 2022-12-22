@@ -10,12 +10,12 @@ import com.common.libnet.ktx.httCall
  */
 class ComposeRepository(private val service: ApiService) {
 
-    suspend fun getVideoList(pageSize: Int,pageNo: Int) = httCall {
-        service.getVideoList(pageSize,pageNo)
+    suspend fun getVideoList(pageNo: Int,pageSize: Int) = httCall {
+        service.getVideoList(pageNo,pageSize)
     }
 
-    suspend fun getNewList() = httCall {
-        service.getNewList()
+    suspend fun getNewList(pageNo: Int,pageSize: Int) = httCall {
+        service.getNewList(pageNo,pageSize)
     }
 
 }

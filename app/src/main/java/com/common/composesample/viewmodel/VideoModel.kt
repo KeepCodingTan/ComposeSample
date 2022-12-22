@@ -7,11 +7,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.common.composesample.Constants
-import com.common.composesample.api.ApiService
 import com.common.composesample.entity.VideoItem
-import com.common.composesample.paging.DataSource
-import com.common.composesample.repository.ComposeRepository
-import com.common.libnet.RetrofitManager
+import com.common.composesample.paging.VideoDataSource
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -21,9 +18,9 @@ import kotlinx.coroutines.flow.Flow
  */
 class VideoModel: ViewModel() {
 
-    private val repository = ComposeRepository(RetrofitManager.createService(ApiService::class.java))
+    /*private val repository = ComposeRepository(RetrofitManager.createService(ApiService::class.java))
 
-    /*var list by mutableStateOf(listOf<VideoItem>())
+    var list by mutableStateOf(listOf<VideoItem>())
         private set
 
     var isRefresh by mutableStateOf(false)
@@ -47,7 +44,7 @@ class VideoModel: ViewModel() {
             prefetchDistance = 1,
             initialLoadSize = Constants.INITIAL_SIZE
         ),
-        pagingSourceFactory = { DataSource(repository) }
+        pagingSourceFactory = { VideoDataSource() }
     ).flow.cachedIn(viewModelScope)
 
 }

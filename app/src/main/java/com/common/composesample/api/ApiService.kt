@@ -14,11 +14,14 @@ interface ApiService {
 
     @GET("user/videoList")
     suspend fun getVideoList(
-        @Query("pageSize") pageSize: Int,
-        @Query("pageNo") pageNo: Int
+        @Query("pageNo") pageNo: Int,
+        @Query("pageSize") pageSize: Int
     ): BaseResponse<VideoBean>
 
     @GET("user/news")
-    suspend fun getNewList(): BaseResponse<VideoBean>
+    suspend fun getNewList(
+        @Query("pageNo") pageNo: Int,
+        @Query("pageSize") pageSize: Int
+    ): BaseResponse<VideoBean>
 
 }

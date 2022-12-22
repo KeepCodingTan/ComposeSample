@@ -110,6 +110,7 @@ fun HomeContent(
             modifier = Modifier
                 .background(MaterialTheme.colors.primary)
                 .padding(vertical = 4.dp)
+                .wrapContentHeight()
         ) {
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
