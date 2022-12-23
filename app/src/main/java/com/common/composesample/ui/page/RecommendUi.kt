@@ -29,6 +29,7 @@ import com.common.composesample.viewmodel.NewViewModel
 import com.common.composesample.widget.AutoBanner
 import com.common.composesample.widget.LoadingMore
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.placeholder.placeholder
 
 /**
  * @Author: Sun
@@ -45,12 +46,13 @@ fun RecommendUi(
     val pagingItems = newsModel.newsList.collectAsLazyPagingItems()
     val isRefreshing = pagingItems.loadState.refresh == LoadState.Loading
     val refreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = { pagingItems.refresh() })
+    val loadSuccess = pagingItems.loadState.prepend.endOfPaginationReached
     Surface(
         modifier = modifier.pullRefresh(refreshState)
     ) {
         LazyColumn(modifier = modifier){
             item {
-                AutoBanner()
+                AutoBanner(loadSuccess)
             }
             items(pagingItems){
                 it?.let {

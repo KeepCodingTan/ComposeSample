@@ -16,12 +16,14 @@ class NewsDataSource(
         RetrofitManager.createService(
             ApiService::class.java
         )
-    )
+    ),
+    val loadSuccess: ()->Unit
 ): DataSource<VideoItem>() {
 
     override suspend fun loadData(currentPage: Int, pageSize: Int): List<VideoItem> {
         return when (val response = repository.getNewList(currentPage, pageSize)) {
             is PackageResponse.Success -> {
+                loadSuccess()
                 response.data?.list ?: listOf()
             }
             is PackageResponse.Failure -> {

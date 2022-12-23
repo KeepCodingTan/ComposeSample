@@ -1,5 +1,8 @@
 package com.common.composesample.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -38,13 +41,15 @@ class NewViewModel:ViewModel() {
         }
     }*/
 
+    var showHolder by mutableStateOf(true)
+
     val newsList: Flow<PagingData<VideoItem>> = Pager(
         config = PagingConfig(
             pageSize = Constants.PAGE_SIZE,
             prefetchDistance = 1,
             initialLoadSize = Constants.INITIAL_SIZE
         ),
-        pagingSourceFactory = { NewsDataSource() }
+        pagingSourceFactory = { NewsDataSource{ showHolder = false } }
     ).flow.cachedIn(viewModelScope)
 
 }

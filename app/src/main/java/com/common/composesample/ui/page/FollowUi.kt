@@ -1,5 +1,6 @@
 package com.common.composesample.ui.page
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,6 +27,7 @@ import com.common.composesample.entity.images
 import com.common.composesample.ui.theme.color_backGround
 import com.common.composesample.ui.theme.color_red
 import com.common.composesample.widget.LoadingMore
+import com.google.accompanist.placeholder.placeholder
 
 /**
  * @Author: Sun
@@ -45,11 +47,12 @@ fun FollowUi(
     val pagingItems = videoModel.videoList.collectAsLazyPagingItems()
     val isRefreshing = pagingItems.loadState.refresh == LoadState.Loading
     val refreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = { pagingItems.refresh() })
+    val loadSuccess = pagingItems.loadState.prepend.endOfPaginationReached
     Surface(
         modifier = modifier.pullRefresh(refreshState)
     ) {
         LazyColumn(
-            modifier = modifier
+            modifier = modifier.placeholder(visible = !loadSuccess, color = Color.LightGray, shape = RoundedCornerShape(4.dp))
         ){
             items(pagingItems){
                 it?.let {

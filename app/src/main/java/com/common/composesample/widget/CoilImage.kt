@@ -27,7 +27,7 @@ import coil.request.ImageRequest
  * @Description: java类作用描述
  */
 @Composable
-fun CoilImage(url: String) {
+fun CoilImage(url: Any) {
     Box {
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)

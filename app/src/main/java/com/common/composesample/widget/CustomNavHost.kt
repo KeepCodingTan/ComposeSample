@@ -4,10 +4,7 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
-import com.common.composesample.ui.page.ArticleDetailUi
-import com.common.composesample.ui.page.MainUi
-import com.common.composesample.ui.page.SearchContent
-import com.common.composesample.ui.page.VideoDetailUi
+import com.common.composesample.ui.page.*
 import com.common.composesample.ui.theme.ThemeKinds
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -88,6 +85,24 @@ fun CustomNavHost(
         ){
             VideoDetailUi(navController = navController)
         }
+
+        composable(
+            route = Destination.PersonMainPage.route,
+            enterTransition = {
+                when(initialState.destination.route){
+                    Destination.MainUi.route -> slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(700))
+                    else -> null
+                }
+            },
+            exitTransition = {
+                when(initialState.destination.route){
+                    Destination.PersonMainPage.route -> slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(700))
+                    else -> null
+                }
+            },
+        ){
+            PersonDetail(navController)
+        }
     }
 }
 
@@ -96,4 +111,5 @@ sealed class Destination(val route: String){
     object ArticleDetail: Destination("ArticleDetail")
     object SearchContent: Destination("SearchContent")
     object VideoDetail: Destination("VideoDetail")
+    object PersonMainPage: Destination("PersonMainPage")
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 fun CustomTopbar(
     title: String,
     actions: ()->Unit = {},
+    showAction: Boolean = true,
     onBack: ()->Unit
 ){
     TopAppBar(
@@ -30,8 +31,12 @@ fun CustomTopbar(
         navigationIcon = { IconButton(onClick = {onBack()}) {
             Icon(imageVector = Icons.Default.ArrowBackIos, contentDescription = "")
         }},
-        actions = { IconButton(onClick = {actions()}) {
-            Icon(imageVector = Icons.Default.Share, contentDescription = "")
-        } }
+        actions = {
+            if(showAction){
+                IconButton(onClick = {actions()}) {
+                    Icon(imageVector = Icons.Default.Share, contentDescription = "")
+                }
+            }
+        }
     )
 }

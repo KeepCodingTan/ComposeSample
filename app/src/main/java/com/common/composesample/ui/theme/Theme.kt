@@ -85,7 +85,7 @@ fun CustomTheme(
         else -> Shapes1
     }
 
-    systemUiController.setSystemBarsColor(color = colors.primary)
+    systemUiController.setStatusBarColor(color = colors.primary)
 
     MaterialTheme(
         colors = colors,

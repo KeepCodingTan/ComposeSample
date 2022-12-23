@@ -11,14 +11,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.common.composesample.widget.CustomPagerIndicator
 import com.common.composesample.entity.banners
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.placeholder.placeholder
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -29,7 +30,9 @@ import java.util.*
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun AutoBanner(){
+fun AutoBanner(
+    loadSuccess: Boolean
+){
     val virtual = Int.MAX_VALUE
     val initialPage = virtual/2
     val pageCount = banners.size
@@ -62,7 +65,8 @@ fun AutoBanner(){
                 contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(7 / 3f),
+                    .aspectRatio(7 / 3f)
+                    .placeholder(visible = !loadSuccess, color = Color.LightGray, shape = RoundedCornerShape(4.dp)),
                 contentScale = ContentScale.Crop
             )
         }
