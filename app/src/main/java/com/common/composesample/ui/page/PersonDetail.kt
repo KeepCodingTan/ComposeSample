@@ -85,6 +85,16 @@ fun PersonDetail(
                 Text(text = "Sun",color = Color.Black)
                 Icon(imageVector = Icons.Default.ArrowForwardIos,tint = MaterialTheme.colors.primary, contentDescription = "",modifier = Modifier.size(22.dp))
             }
+            Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(color_backGround))
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "拍一拍",color = Color.Black, modifier = Modifier.weight(1f))
+                Text(text = "的背并叫了声欧巴",color = Color.Black)
+                Icon(imageVector = Icons.Default.ArrowForwardIos,tint = MaterialTheme.colors.primary, contentDescription = "",modifier = Modifier.size(22.dp))
+            }
         }
     }
 }

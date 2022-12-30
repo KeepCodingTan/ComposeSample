@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.blankj.utilcode.util.ToastUtils
 import com.common.composesample.ui.theme.color_backGround
 import com.common.composesample.widget.CoilImage
 import com.common.composesample.widget.ExploreImageContainer
@@ -90,7 +91,8 @@ fun MineItem(
         Row(modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.background)
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 16.dp)
+            .clickable { ToastUtils.showShort(title) },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(imageVector = icon, tint = MaterialTheme.colors.primary, contentDescription = "", modifier = Modifier.size(22.dp))
